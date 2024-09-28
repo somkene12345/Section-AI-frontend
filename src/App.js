@@ -11,8 +11,6 @@ const App = () => {
   const [input, setInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
   const [isListening, setIsListening] = useState(false); // New state for voice recognition
 
   const getIcon = (iconName) => {
@@ -62,41 +60,9 @@ const App = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedImage(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleImageSubmit = async () => {
-    if (!selectedImage) return;
-
-    const formData = new FormData();
-    formData.append('file', selectedImage);
-
-    try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      alert('Image uploaded successfully');
-      setSelectedImage(null);
-      setImagePreview(null);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (selectedImage) {
-      handleImageSubmit();
-    } else {
       handleTextSubmit();
-    }
   };
 
   const startVoiceRecognition = () => {
