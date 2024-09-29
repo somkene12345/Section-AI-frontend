@@ -3,15 +3,15 @@ import axios from 'axios';
 import './App.css'; // Ensure the path is correct
 import logo from './logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as icons from '@fortawesome/free-solid-svg-icons';  // Import all solid icons
-import * as regularIcons from '@fortawesome/free-regular-svg-icons'; // Import all regular icons
-import * as brandIcons from '@fortawesome/free-brands-svg-icons'; // Import all brand icons
+import * as icons from '@fortawesome/free-solid-svg-icons';
+import * as regularIcons from '@fortawesome/free-regular-svg-icons';
+import * as brandIcons from '@fortawesome/free-brands-svg-icons';
 
 const App = () => {
   const [input, setInput] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false); // New state for voice recognition
+  const [isListening, setIsListening] = useState(false);
 
   const getIcon = (iconName) => {
     if (icons[iconName]) return icons[iconName];
@@ -42,17 +42,24 @@ const App = () => {
   const handleTextSubmit = async () => {
     if (!input) return;
 
-    setChatHistory([...chatHistory, { role: 'user', content: input }]);
+    setChatHistory((prevHistory) => [...prevHistory, { role: 'user', content: input }]);
     setInput('');
     setLoading(true);
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/chat`, {
+      console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/chat`);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, {
         messages: [...chatHistory, { role: 'user', content: input }],
       });
-      const aiReply = response.data.reply;
 
-      setChatHistory([...chatHistory, { role: 'user', content: input }, { role: 'assistant', content: aiReply }]);
+      const aiReply = response.data.reply;
+      console.log('AI Reply:', aiReply);
+
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { role: 'user', content: input },
+        { role: 'assistant', content: aiReply }
+      ]);
     } catch (error) {
       console.error('Error:', error.message);
     } finally {
@@ -62,14 +69,13 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      handleTextSubmit();
+    handleTextSubmit();
   };
 
   const startVoiceRecognition = () => {
     recognition.start();
   };
 
-  // Function to convert new lines to HTML <br/> tags
   const formatText = (text) => {
     return text.replace(/\n/g, '<br/>');
   };
@@ -82,9 +88,7 @@ const App = () => {
       <div className="chat-history">
         {chatHistory.map((msg, index) => (
           <div key={index} className="chat-message">
-            <strong>{msg.role === 'user' ? 'You' : (
-              <img src={logo} alt="Logo" className="logo" />
-            )}</strong>
+            <strong>{msg.role === 'user' ? 'You' : <img src={logo} alt="Logo" className="logo" />}</strong>
             <div dangerouslySetInnerHTML={{ __html: formatText(msg.content) }} />
           </div>
         ))}
@@ -102,12 +106,12 @@ const App = () => {
             <button
               type="button"
               className="upload-button"
-              onClick={startVoiceRecognition} // Start voice recognition
+              onClick={startVoiceRecognition}
             >
-              {isListening ? 'Listening...' : <FontAwesomeIcon icon={getIcon('faMicrophone')} />}
+              {isListening ? <FontAwesomeIcon icon={getIcon('faVolumeHigh')} /> : <FontAwesomeIcon icon={getIcon('faMicrophone')} />}
             </button>
             <button type="submit" disabled={loading}>
-              {loading ? 'Processing...' : <FontAwesomeIcon icon={getIcon('faArrowUp')} />}
+              {loading ? <FontAwesomeIcon icon={getIcon('faEllipsis')} /> : <FontAwesomeIcon icon={getIcon('faArrowUp')} />}
             </button>
           </form>
         </div>
