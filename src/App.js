@@ -39,7 +39,33 @@ const App = () => {
     handleTextSubmit(); // Automatically submit after capturing the voice input
   };
 
+  const handleTextSubmit = async () => {
+    if (!input) return;
 
+    setChatHistory((prevHistory) => [...prevHistory, { role: 'user', content: input }]);
+    setInput('');
+    setLoading(true);
+
+    try {
+      console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/chat`);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, {
+        messages: [...chatHistory, { role: 'user', content: input }],
+      });
+
+      const aiReply = response.data.reply;
+      console.log('AI Reply:', aiReply);
+
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { role: 'user', content: input },
+        { role: 'assistant', content: aiReply }
+      ]);
+    } catch (error) {
+      console.error('Error:', error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
