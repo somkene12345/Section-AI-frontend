@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'; // Ensure the path is correct
+import './App.css'; 
 import logo from './logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as icons from '@fortawesome/free-solid-svg-icons';
@@ -36,30 +36,27 @@ const App = () => {
   recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript;
     setInput(transcript);
-    handleTextSubmit(); // Automatically submit after capturing the voice input
+    handleTextSubmit(); // Automatically submit after capturing voice input
   };
 
   const handleTextSubmit = async () => {
     if (!input) return;
-  
-    // Create a new chat history array including the user's input
-    const currentChatHistory = [...chatHistory, { role: 'user', content: input }];
-    
-    // Update chat history with user input
-    setChatHistory(currentChatHistory);
-    setInput('');
+
     setLoading(true);
-  
+
+    // Add user's message to chat history
+    const updatedChatHistory = [...chatHistory, { role: 'user', content: input }];
+    setChatHistory(updatedChatHistory);
+    setInput(''); // Clear the input after submission
+
     try {
-      console.log('Sending request to:', `${process.env.REACT_APP_API_URL}/chat`);
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, {
-        messages: currentChatHistory,
+        messages: updatedChatHistory,
       });
-  
+
       const aiReply = response.data.reply;
-      console.log('AI Reply:', aiReply);
-  
-      // Add AI's reply to the chat history
+
+      // Add AI's reply to chat history
       setChatHistory((prevHistory) => [
         ...prevHistory,
         { role: 'assistant', content: aiReply },
@@ -87,8 +84,6 @@ const App = () => {
   return (
     <div className="app-container">
       <header><h1>§ection AI</h1></header>
-      <p></p>
-      <br></br>
       <div className="chat-history">
         {chatHistory.map((msg, index) => (
           <div key={index} className="chat-message">
@@ -97,7 +92,6 @@ const App = () => {
           </div>
         ))}
       </div>
-      <p></p>
       <footer>
         <div className="form-container">
           <form onSubmit={handleSubmit} className="input-form">
