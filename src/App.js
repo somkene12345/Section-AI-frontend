@@ -83,6 +83,10 @@ const App = () => {
   return (
     <div className="app-container">
       <header><h1>§ection AI</h1></header>
+      <p>
+        <p>
+        </p>
+      </p>
       <div className="chat-history">
         {chatHistory.map((msg, index) => (
           <div key={index} className="chat-message">

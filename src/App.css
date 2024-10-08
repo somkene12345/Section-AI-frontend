@@ -26,7 +26,8 @@ border-left: 1px solid #ff0000;
   border-right: 1px solid #0000ff;
   border-bottom: 1px solid #0000ff;
 }
-.dv4cm{
+.chat-message div{
+display: block;
 width:fit-content;
 align-items:baseline;
 justify-self: auto;
@@ -44,10 +45,6 @@ padding-left: 35px;
 padding-right: 35px;
 padding-top:5px;
 padding-bottom:5px;
-}
-
-.chat-message > div:not(.dv4cm){
-  display: block;
 }
 
 .logo {
@@ -164,4 +161,4 @@ padding-bottom:5px;
   height: auto;
   border: 1px solid #ccc;
   border-radius: 5px;
-}*/
+}
