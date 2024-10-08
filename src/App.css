@@ -74,6 +74,10 @@ padding-bottom:5px;
   box-sizing: border-box;
 }
 
+.chat-message > div:not(.chat-history .dv4cm) {
+  display: block;
+  }
+
 .form-container {
   position: fixed;
   bottom: 0;
