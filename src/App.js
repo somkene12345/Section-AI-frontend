@@ -41,32 +41,31 @@ const App = () => {
 
   const handleTextSubmit = async () => {
     if (!input) return;
-
+    
     setLoading(true);
-
+    
     // Add user's message to chat history
-    const updatedChatHistory = [...chatHistory, { role: 'user', content: input }];
-    setChatHistory(updatedChatHistory);
+    setChatHistory((prevHistory) => [...prevHistory, { role: 'user', content: input }]);
     setInput(''); // Clear the input after submission
-
+    
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, {
-        messages: updatedChatHistory,
-      });
-
-      const aiReply = response.data.reply;
-
-      // Add AI's reply to chat history
-      setChatHistory((prevHistory) => [
-        ...prevHistory,
-        { role: 'assistant', content: aiReply },
-      ]);
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, {
+    messages: chatHistory, // Use the current state value
+    });
+    
+    const aiReply = response.data.reply;
+    
+    // Add AI's reply to chat history
+    setChatHistory((prevHistory) => [
+    ...prevHistory,
+    { role: 'assistant', content: aiReply },
+    ]);
     } catch (error) {
-      console.error('Error:', error.message);
+    console.error('Error:', error.message);
     } finally {
-      setLoading(false);
+    setLoading(false);
     }
-  };
+    };
 
   const handleSubmit = (e) => {
     e.preventDefault();
