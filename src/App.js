@@ -87,7 +87,7 @@ const App = () => {
         {chatHistory.map((msg, index) => (
           <div key={index} className="chat-message">
             <strong>{msg.role === 'user' ? 'You' : <img src={logo} alt="Logo" className="logo" />}</strong>
-            <div dangerouslySetInnerHTML={{ __html: formatText(msg.content) }} />
+            <div dangerouslySetInnerHTML={{ __html: formatText(msg.content) }} className='dv4cm'/>
           </div>
         ))}
       </div>
