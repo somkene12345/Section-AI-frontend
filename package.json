@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "proxy": "https://section-ai-backend.vercel.app",
+  "proxy": "https://section-ai.vercel.app",
   "homepage": ".",
   "private": true,
   "dependencies": {
